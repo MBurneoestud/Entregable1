@@ -25,3 +25,8 @@
 - La lista debera incluir una unidad de tipo personaje por defecto, , caso contrario se retorna un error
 - Armas asignadas a unidades no compatibles generaran un error en el programa
 
+## Criterios de Aceptacion 
+- El programa funciona inicialmente en Javascript, luego migrado a TypeScript
+- El programa acepta inputs del usuario en la terminal
+
+
