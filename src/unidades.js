@@ -1,3 +1,22 @@
 export const catalogoUnidades = [
-    {nombre: "Assault Intercessor Squad", tipo: "Battle Line", }
-]
+    {nombre: "Assault Intercessor Squad", tipo: "Battle Line", puntos: 75 },
+    {nombre: "Heavy Intercessor Squad", tipo: "Battle Line", puntos: 100},
+    {nombre: "Intercessor Squad", tipo: "Battle Line", puntos: 80},
+    {nombre: "Tactical Squad", tipo: "Battle Line", puntos: 140},
+    {nombre: "Terminator Squad", tipo: "Infantry", puntos: 160 },
+    {nombre: "Terminator Assault Squad", tipo: "Infantry", puntos: 180},
+    {nombre: "Eliminator Squad", tipo: "Infantry", puntos: 75},
+    {nombre: "Infernus Squad", tipo: "Infantry", puntos: 85},
+    {nombre: "Bike Squad", tipo: "Mounted", puntos: 80 },
+    {nombre: "Outrider Squad", tipo: "Mounted", puntos: 70},
+    {nombre: "Invader ATV", tipo: "Mounted", puntos: 60},
+    {nombre: "Astraeus Super Heavy Tank", tipo: "Vehicle", puntos: 525},
+    {nombre: "Land Raider", tipo: "Vehicle", puntos: 220 },
+    {nombre: "Land Speeder", tipo: "Vehicle", puntos: 105},
+    {nombre: "Redemptor Dreadnought", tipo: "Vehicle", puntos: 195},
+    {nombre: "Repulsor", tipo: "Vehicle", puntos: 170},
+    {nombre: "Captain", tipo: "Character", puntos: 80 },
+    {nombre: "Librarian", tipo: "Character", puntos: 70},
+    {nombre: "Techmarine", tipo: "Character", puntos: 55},
+    {nombre: "Apothecary", tipo: "Character", puntos: 40}
+];
