@@ -1,32 +1,10 @@
 import { Unit } from "./Unit.js";
-
-export interface IKeywordLimits {
-    Infantry: number;
-    Battleline: number;
-    Mounted: number;
-    Vehicle: number;
-    Character: number;
-}
-
-export interface IPointLimit {
-    min: number;
-    max: number;
-}
-
-export interface IArmyList {
-    name: string;
-    units: Unit[];
-    pointLimit: IPointLimit;
-    keywordLimits: IKeywordLimits;
-}
-
-export class ArmyList implements IArmyList {
-    name: string;
-    units: Unit[];
-    pointLimit: IPointLimit;
-    keywordLimits: IKeywordLimits;
-
-    constructor(name: string) {
+export class ArmyList {
+    name;
+    units;
+    pointLimit;
+    keywordLimits;
+    constructor(name) {
         this.name = name;
         this.units = [];
         this.pointLimit = { min: 500, max: 1000 };
@@ -38,63 +16,53 @@ export class ArmyList implements IArmyList {
             Character: 1
         };
     }
-
-    getTotalPoints(): number {
+    getTotalPoints() {
         return this.units.reduce((sum, unit) => sum + unit.getTotalPoints(), 0);
     }
-
-    isValidPointCost(): boolean {
+    isValidPointCost() {
         const total = this.getTotalPoints();
         return total >= this.pointLimit.min && total <= this.pointLimit.max;
     }
-
-    countUnitsByKeyword(keyword: string): number {
+    countUnitsByKeyword(keyword) {
         return this.units.filter(unit => unit.hasKeyword(keyword)).length;
     }
-
-    canAddUnit(unit: Unit): boolean {
+    canAddUnit(unit) {
         for (const keyword of unit.keywords) {
-            if (this.keywordLimits[keyword as keyof IKeywordLimits] !== undefined) {
+            if (this.keywordLimits[keyword] !== undefined) {
                 const currentCount = this.countUnitsByKeyword(keyword);
-                if (currentCount >= this.keywordLimits[keyword as keyof IKeywordLimits]) {
+                if (currentCount >= this.keywordLimits[keyword]) {
                     return false;
                 }
             }
         }
         return true;
     }
-
-    hasCharacter(): boolean {
+    hasCharacter() {
         return this.countUnitsByKeyword('Character') > 0;
     }
-
-    addUnit(unit: Unit): boolean {
+    addUnit(unit) {
         if (!this.canAddUnit(unit)) {
             return false;
         }
         this.units.push(unit);
         return true;
     }
-
-    getDisplayString(): string {
+    getDisplayString() {
         let output = `\n=== ${this.name} ===\n`;
         output += `Total Points: ${this.getTotalPoints()} / ${this.pointLimit.max}\n`;
         output += `Units: ${this.units.length}\n\n`;
-
         this.units.forEach((unit, index) => {
             output += `${index + 1}. ${unit.getDisplayString()}\n`;
         });
-
         output += `\nKeyword Counts:\n`;
         for (const [keyword, limit] of Object.entries(this.keywordLimits)) {
             const count = this.countUnitsByKeyword(keyword);
             output += `  ${keyword}: ${count}/${limit}\n`;
         }
-
         return output;
     }
-
-    isValid(): boolean {
+    isValid() {
         return this.hasCharacter() && this.isValidPointCost();
     }
 }
+//# sourceMappingURL=ArmyList.js.map
