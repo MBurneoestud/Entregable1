@@ -18,5 +18,9 @@
   "bugs": {
     "url": "https://github.com/MBurneoestud/Entregable1/issues"
   },
-  "homepage": "https://github.com/MBurneoestud/Entregable1#readme"
+  "homepage": "https://github.com/MBurneoestud/Entregable1#readme",
+  "devDependencies": {
+    "@types/node": "^26.4.0",
+    "typescript": "^7.0.2"
+  }
 }
