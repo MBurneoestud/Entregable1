@@ -25,8 +25,46 @@
 - La lista debera incluir una unidad de tipo personaje por defecto, , caso contrario se retorna un error
 - Armas asignadas a unidades no compatibles generaran un error en el programa
 
-## Criterios de Aceptacion 
+## Criterios de Aceptacion
 - El programa funciona inicialmente en Javascript, luego migrado a TypeScript
 - El programa acepta inputs del usuario en la terminal
 
+## Explicacion de Tipos Usados
+
+### Tipos Primitivos
+- **`string`**: Utilizado para nombres, palabras clave, mensajes y datos de texto
+- **`number`**: Utilizado para valores de puntos, contadores, índices y límites
+- **`boolean`**: Utilizado para resultados de validación y verificaciones condicionales
+- **`void`**: Utilizado para métodos que no retornan valores
+
+### Interfaces
+- **`IWeapon`**: Define la estructura de objetos de arma (nombre, puntos, tipos de unidades compatibles)
+- **`IUnit`**: Define la estructura de objetos de unidad (nombre, puntos base, palabras clave, armas disponibles/equipadas)
+- **`IKeywordLimits`**: Define los límites para cada tipo de palabra clave (Infantería, Batallón, Montado, Vehículo, Personaje)
+- **`IPointLimit`**: Define el rango válido de puntos para listas de ejército (500-1000)
+- **`IArmyList`**: Define la estructura completa de la lista de ejército, compuesta por otras interfaces
+
+### Tipos de Arreglo
+- **`Weapon[]`**: Arreglo de objetos Weapon
+- **`Unit[]`**: Arreglo de objetos Unit
+- **`string[]`**: Arreglo de strings (palabras clave, tipos compatibles)
+
+### Tipos de Unión
+- **`ArmyList | null`**: Utilizado para propiedades que pueden ser null antes de inicialización
+
+### Tipos Promise
+- **`Promise<string>`**: Métodos asíncronos que retornan strings
+- **`Promise<void>`**: Métodos asíncronos que no retornan valores
+- **`Promise<number>`**: Métodos asíncronos que retornan números
+
+### Características Especiales de TypeScript
+- **Aserción no-null (`!`)**: Indica a TypeScript que un valor no será null
+- **Aserciones de tipo**: Utilizadas para acceder a propiedades de objetos dinámicamente
+- **Implementación de interfaces**: Las clases implementan interfaces usando la palabra clave `implements`
+
+### Beneficios de Seguridad de Tipos
+- **Verificación en tiempo de compilación**: Detecta errores de tipo antes de la ejecución
+- **Soporte IntelliSense**: Mejor autocompletado y documentación
+- **Seguridad en refactorización**: Los cambios en tipos se propagan a través del código
+- **Código autodocumentado**: Los tipos sirven como documentación en línea
 
