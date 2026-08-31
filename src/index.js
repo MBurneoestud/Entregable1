@@ -1,1 +1,1 @@
-import { Terminal } from "./utils/terminal";
+import { Terminal } from "./utils/terminal.js";

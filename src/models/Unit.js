@@ -1,7 +1,7 @@
-import { Weapon } from "./Weapon";
+import { Weapon } from "./Weapon.js";
 
 export class Unit {
-    constructor(name, basePoints, keyword, availableWeapons = []) {
+    constructor(name, basePoints, keywords, availableWeapons = []) {
         this.name = name;
         this.basePoints = basePoints;
         this.keywords = keywords;
