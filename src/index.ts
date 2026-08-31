@@ -4,13 +4,17 @@ import { Unit } from "./models/Unit.js";
 import { spaceMarinesUnits, spaceMarinesWeapons } from "./data/SpaceMarinesData.js";
 
 class ArmyListBuilder {
+    terminal: Terminal;
+    armyList: ArmyList | null;
+    faction: string;
+
     constructor() {
         this.terminal = new Terminal();
         this.armyList = null;
         this.faction = 'Space Marines';
     }
 
-    async start() {
+    async start(): Promise<void> {
         this.terminal.clear();
         this.terminal.printHeader('Warhammer 40,00 Army List Builder');
         this.terminal.print(`Faction: ${this.faction}`);
@@ -23,21 +27,21 @@ class ArmyListBuilder {
         await this.mainMenu();
     }
 
-    async createArmyList() {
+    async createArmyList(): Promise<void> {
         while (true) {
-            const name = await this.terminal.ask('Enter a name for your amry list: ');
+            const name = await this.terminal.ask('Enter a name for your army list: ');
             if (name.length > 0) {
                 this.armyList = new ArmyList(name);
-                this.terminal.print(`\mArmy list "${name}" created successfully!\n`);
+                this.terminal.print(`\nArmy list "${name}" created successfully!\n`);
                 break;
             }
             this.terminal.print('List name cannot be empty. Please try again\n');
         }
     }
 
-    async mainMenu() {
+    async mainMenu(): Promise<void> {
         while(true) {
-            this.terminal.print(this.armyList.getDisplayString());
+            this.terminal.print(this.armyList!.getDisplayString());
 
             const options = [
                 'Add Unit',
@@ -82,14 +86,14 @@ class ArmyListBuilder {
         }
     }
 
-    async addUnit() {
+    async addUnit(): Promise<void> {
         this.terminal.printHeader('Add Unit');
 
-        const availableUnits = spaceMarinesUnits.filter(unit => this.armyList.canAddUnit(unit));
+        const availableUnits = spaceMarinesUnits.filter(unit => this.armyList!.canAddUnit(unit));
 
         if (availableUnits.length === 0) {
             this.terminal.print('No units available to add. Keyword limits reached.\n');
-            await this.terminal.asl('Press Enter to continue...');
+            await this.terminal.ask('Press Enter to continue...');
             return;
         }
 
@@ -105,7 +109,7 @@ class ArmyListBuilder {
             [...selectedUnit.availableWeapons]
         );
 
-        if (this.armyList.addUnit(newUnit)) {
+        if (this.armyList!.addUnit(newUnit)) {
             this.terminal.print(`\n${newUnit.name} added to the list!\n`);
         } else {
             this.terminal.print('\nFailed to add unit. Keyword limit reached.\n');
@@ -114,16 +118,16 @@ class ArmyListBuilder {
         await this.terminal.ask('Press Enter to continue...');
     }
 
-    async addWeaponToUnit() {
+    async addWeaponToUnit(): Promise<void> {
         this.terminal.printHeader('Add Weapon to Unit');
 
-        if (this.armyList.units.length === 0) {
+        if (this.armyList!.units.length === 0) {
             this.terminal.print('No units in the list. Add a unit first.\n');
             await this.terminal.ask('Press Enter to continue...');
             return;
         }
 
-        const unitOptions = this.armyList.units.map((unit, index) => `${index + 1}. ${unit.getDisplayString()}`);
+        const unitOptions = this.armyList!.units.map((unit, index) => `${index + 1}. ${unit.getDisplayString()}`);
 
         this.terminal.print('Select a unit:');
         unitOptions.forEach(option => this.terminal.print(option));
@@ -131,13 +135,13 @@ class ArmyListBuilder {
         const unitChoice = await this.terminal.ask('\nEnter unit number: ');
         const unitIndex = parseInt(unitChoice) -1;
 
-        if (isNaN(unitIndex) || unitIndex < 0 || unitIndex >= this.armyList.units.length) {
+        if (isNaN(unitIndex) || unitIndex < 0 || unitIndex >= this.armyList!.units.length) {
             this.terminal.print('\nInvalid unit selection.\n');
             await this.terminal.ask('Press Enter to continue...');
             return;
         }
 
-        const selectedUnit = this.armyList.units[unitIndex];
+        const selectedUnit = this.armyList!.units[unitIndex];
         const availableWeapons = selectedUnit.availableWeapons.filter(weapon => !selectedUnit.equippedWeapons.some(equipped => equipped.name === weapon.name));
 
         if (availableWeapons.length === 0) {
@@ -160,35 +164,35 @@ class ArmyListBuilder {
         await this.terminal.ask('Press Enter to continue...');
     }
 
-    async removeUnit() {
+    async removeUnit(): Promise<void> {
         this.terminal.printHeader('Remove Unit');
 
-        if(this.armyList.units.length === 0) {
+        if(this.armyList!.units.length === 0) {
             this.terminal.print('No units in the list.\n');
             await this.terminal.ask('Press Enter to continue...');
             return;
         }
 
-        const options = this.armyList.units.map((unit, index) => `${unit.getDisplayString()}`);
+        const options = this.armyList!.units.map((unit, index) => `${unit.getDisplayString()}`);
 
 
         const choice = await this.terminal.showMenu(options);
-        const removedUnit = this.armyList.units.splice(choice, 1)[0];
+        const removedUnit = this.armyList!.units.splice(choice, 1)[0];
 
         this.terminal.print(`\n${removedUnit.name} removed from the list!\n`);
         await this.terminal.ask('Press Enter to continue...');
     }
 
-    async removeWeaponFromUnit() {
+    async removeWeaponFromUnit(): Promise<void> {
         this.terminal.printHeader('Remove Weapon from Unit');
 
-        if (this.armyList.units.length === 0) {
+        if (this.armyList!.units.length === 0) {
             this.terminal.print('No units in the list.\n');
             await this.terminal.ask('Press Enter to continue...');
             return;
         }
 
-        const unitOptions = this.armyList.units.map((unit, index) => `${index + 1}. ${unit.getDisplayString()}`);
+        const unitOptions = this.armyList!.units.map((unit, index) => `${index + 1}. ${unit.getDisplayString()}`);
 
         this.terminal.print('Select a unit:');
         unitOptions.forEach(option => this.terminal.print(option));
@@ -196,13 +200,13 @@ class ArmyListBuilder {
         const unitChoice = await this.terminal.ask('\nEnter unit number: ');
         const unitIndex = parseInt(unitChoice) - 1;
 
-        if (isNaN(unitIndex) || unitIndex < 0 || unitIndex >= this.armyList.units.length) {
+        if (isNaN(unitIndex) || unitIndex < 0 || unitIndex >= this.armyList!.units.length) {
             this.terminal.print('\nInvalid unit selection.\n');
             await this.terminal.ask('Press Enter to continue...');
             return;
         }
 
-        const selectedUnit = this.armyList.units[unitIndex];
+        const selectedUnit = this.armyList!.units[unitIndex];
 
         if (selectedUnit.equippedWeapons.length === 0) {
             this.terminal.print('\nNo weapons equipped on this unit.\n');
@@ -219,7 +223,7 @@ class ArmyListBuilder {
         await this.terminal.ask('Press Enter to continue...');
     }
 
-    async filterUnitsByKeyword() {
+    async filterUnitsByKeyword(): Promise<void> {
         this.terminal.printHeader('Filter Units by Keyword');
     
         const keywords = ['Infantry', 'Battleline', 'Mounted', 'Vehicle', 'Character'];
@@ -255,7 +259,7 @@ class ArmyListBuilder {
         await this.terminal.ask('\nPress Enter to continue...');
     }
 
-    async sortUnitsByPoints() {
+    async sortUnitsByPoints(): Promise<void> {
         this.terminal.printHeader('Sort Units by Points');
     
         const sortOptions = [
@@ -281,13 +285,13 @@ class ArmyListBuilder {
         await this.terminal.ask('\nPress Enter to continue...');
     }
 
-    async validateList() {
+    async validateList(): Promise<void> {
         this.terminal.printHeader('List Validation');
     
-        const totalPoints = this.armyList.getTotalPoints();
-        const hasCharacter = this.armyList.hasCharacter();
-        const withinPointLimit = this.armyList.isValidPointCost();
-        const isValid = this.armyList.isValid();
+        const totalPoints = this.armyList!.getTotalPoints();
+        const hasCharacter = this.armyList!.hasCharacter();
+        const withinPointLimit = this.armyList!.isValidPointCost();
+        const isValid = this.armyList!.isValid();
 
         this.terminal.print(`Total Points: ${totalPoints}`);
         this.terminal.print(`Point Limit: 500 - 1,000`);

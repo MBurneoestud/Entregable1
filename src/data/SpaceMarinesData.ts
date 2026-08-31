@@ -1,7 +1,7 @@
 import { Weapon } from "../models/Weapon.js";
 import { Unit } from "../models/Unit.js";
 
-export const spaceMarinesWeapons = [
+export const spaceMarinesWeapons: Weapon[] = [
     new Weapon('Boltgun', 0, ['Battleline', 'Character']),
     new Weapon('Bolt Pistol', 0, ['Battleline', 'Character', 'Mounted']),
     new Weapon('Chainsword', 0, ['Battleline', 'Character', 'Mounted']),
@@ -30,7 +30,7 @@ export const spaceMarinesWeapons = [
     new Weapon('Twin Bolt Rifle', 5, ['Mounted']),
 ];
 
-export const spaceMarinesUnits = [
+export const spaceMarinesUnits: Unit[] = [
     //Battleline Units
     new Unit('Intercessor Squad', 80, ['Battleline'], [
         spaceMarinesWeapons[0], spaceMarinesWeapons[1], spaceMarinesWeapons[2],
