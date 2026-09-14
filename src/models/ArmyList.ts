@@ -1,4 +1,5 @@
 import { Unit } from "./Unit.js";
+import type { Keyword } from "./Weapon.js";
 
 export interface IKeywordLimits {
     Infantry: number;
@@ -48,15 +49,15 @@ export class ArmyList implements IArmyList {
         return total >= this.pointLimit.min && total <= this.pointLimit.max;
     }
 
-    countUnitsByKeyword(keyword: string): number {
+    countUnitsByKeyword(keyword: Keyword): number {
         return this.units.filter(unit => unit.hasKeyword(keyword)).length;
     }
 
     canAddUnit(unit: Unit): boolean {
         for (const keyword of unit.keywords) {
-            if (this.keywordLimits[keyword as keyof IKeywordLimits] !== undefined) {
+            if (this.keywordLimits[keyword] !== undefined) {
                 const currentCount = this.countUnitsByKeyword(keyword);
-                if (currentCount >= this.keywordLimits[keyword as keyof IKeywordLimits]) {
+                if (currentCount >= this.keywordLimits[keyword]) {
                     return false;
                 }
             }
@@ -65,7 +66,7 @@ export class ArmyList implements IArmyList {
     }
 
     hasCharacter(): boolean {
-        return this.countUnitsByKeyword('Character') > 0;
+        return this.countUnitsByKeyword('Character' as Keyword) > 0;
     }
 
     addUnit(unit: Unit): boolean {
@@ -87,7 +88,7 @@ export class ArmyList implements IArmyList {
 
         output += `\nKeyword Counts:\n`;
         for (const [keyword, limit] of Object.entries(this.keywordLimits)) {
-            const count = this.countUnitsByKeyword(keyword);
+            const count = this.countUnitsByKeyword(keyword as Keyword);
             output += `  ${keyword}: ${count}/${limit}\n`;
         }
 

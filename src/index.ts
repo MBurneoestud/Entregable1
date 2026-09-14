@@ -2,6 +2,7 @@ import { Terminal } from "./utils/terminal.js";
 import { ArmyList } from "./models/ArmyList.js";
 import { Unit } from "./models/Unit.js";
 import { spaceMarinesUnits, spaceMarinesWeapons } from "./data/SpaceMarinesData.js";
+import type { Keyword } from "./models/Weapon.js";
 
 class ArmyListBuilder {
     terminal: Terminal;
@@ -15,16 +16,23 @@ class ArmyListBuilder {
     }
 
     async start(): Promise<void> {
-        this.terminal.clear();
-        this.terminal.printHeader('Warhammer 40,00 Army List Builder');
-        this.terminal.print(`Faction: ${this.faction}`);
-        this.terminal.print(`Point Limit: 500 - 1,000 points`);
-        this.terminal.print(`Keywords: Infantry, Battleline, Mounted, Vehicle, Character`);
-        this.terminal.print(`Max 4 units per keyword`);
-        this.terminal.print(`Must include at least 1 Character unit\n`);
+        try {
+            this.terminal.clear();
+            this.terminal.printHeader('Warhammer 40,00 Army List Builder');
+            this.terminal.print(`Faction: ${this.faction}`);
+            this.terminal.print(`Point Limit: 500 - 1,000 points`);
+            this.terminal.print(`Keywords: Infantry, Battleline, Mounted, Vehicle, Character`);
+            this.terminal.print(`Max 4 units per keyword`);
+            this.terminal.print(`Must include at least 1 Character unit\n`);
 
-        await this.createArmyList();
-        await this.mainMenu();
+            await this.createArmyList();
+            await this.mainMenu();
+        } catch (error) {
+            this.terminal.print('An unexpected error occurred:');
+            this.terminal.print(error instanceof Error ? error.message : String(error));
+            this.terminal.close();
+            process.exit(1);
+        }
     }
 
     async createArmyList(): Promise<void> {
@@ -133,7 +141,14 @@ class ArmyListBuilder {
         unitOptions.forEach(option => this.terminal.print(option));
 
         const unitChoice = await this.terminal.ask('\nEnter unit number: ');
-        const unitIndex = parseInt(unitChoice) -1;
+        let unitIndex: number;
+        try {
+            unitIndex = parseInt(unitChoice) - 1;
+        } catch (error) {
+            this.terminal.print('\nInvalid unit selection.\n');
+            await this.terminal.ask('Press Enter to continue...');
+            return;
+        }
 
         if (isNaN(unitIndex) || unitIndex < 0 || unitIndex >= this.armyList!.units.length) {
             this.terminal.print('\nInvalid unit selection.\n');
@@ -175,7 +190,6 @@ class ArmyListBuilder {
 
         const options = this.armyList!.units.map((unit, index) => `${unit.getDisplayString()}`);
 
-
         const choice = await this.terminal.showMenu(options);
         const removedUnit = this.armyList!.units.splice(choice, 1)[0];
 
@@ -198,7 +212,14 @@ class ArmyListBuilder {
         unitOptions.forEach(option => this.terminal.print(option));
 
         const unitChoice = await this.terminal.ask('\nEnter unit number: ');
-        const unitIndex = parseInt(unitChoice) - 1;
+        let unitIndex: number;
+        try {
+            unitIndex = parseInt(unitChoice) - 1;
+        } catch (error) {
+            this.terminal.print('\nInvalid unit selection.\n');
+            await this.terminal.ask('Press Enter to continue...');
+            return;
+        }
 
         if (isNaN(unitIndex) || unitIndex < 0 || unitIndex >= this.armyList!.units.length) {
             this.terminal.print('\nInvalid unit selection.\n');
@@ -226,7 +247,7 @@ class ArmyListBuilder {
     async filterUnitsByKeyword(): Promise<void> {
         this.terminal.printHeader('Filter Units by Keyword');
     
-        const keywords = ['Infantry', 'Battleline', 'Mounted', 'Vehicle', 'Character'];
+        const keywords: Keyword[] = ['Infantry', 'Battleline', 'Mounted', 'Vehicle', 'Character'];
     
         this.terminal.print('Available keywords:');
         keywords.forEach((keyword, index) => {
@@ -234,7 +255,14 @@ class ArmyListBuilder {
         });
     
         const keywordChoice = await this.terminal.ask('\nEnter keyword number: ');
-        const keywordIndex = parseInt(keywordChoice) - 1;
+        let keywordIndex: number;
+        try {
+            keywordIndex = parseInt(keywordChoice) - 1;
+        } catch (error) {
+            this.terminal.print('\nInvalid keyword selection.\n');
+            await this.terminal.ask('Press Enter to continue...');
+            return;
+        }
 
         if (isNaN(keywordIndex) || keywordIndex < 0 || keywordIndex >= keywords.length) {
             this.terminal.print('\nInvalid keyword selection.\n');
@@ -243,7 +271,7 @@ class ArmyListBuilder {
         }
 
         const selectedKeyword = keywords[keywordIndex];
-        const filteredUnits = spaceMarinesUnits.filter(unit => unit.hasKeyword(selectedKeyword));
+        const filteredUnits = spaceMarinesUnits.filter(unit => unit.hasKeyword(selectedKeyword as Keyword));
 
         this.terminal.print(`\n=== Units with "${selectedKeyword}" keyword ===\n`);
     
