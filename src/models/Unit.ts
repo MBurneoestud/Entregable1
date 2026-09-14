@@ -1,9 +1,10 @@
 import { Weapon } from "./Weapon.js";
+import type { Keyword } from "./Weapon.js";
 
 export interface IUnit {
     name: string;
     basePoints: number;
-    keywords: string[];
+    keywords: Keyword[];
     availableWeapons: Weapon[];
     equippedWeapons: Weapon[];
 }
@@ -11,11 +12,11 @@ export interface IUnit {
 export class Unit implements IUnit {
     name: string;
     basePoints: number;
-    keywords: string[];
+    keywords: Keyword[];
     availableWeapons: Weapon[];
     equippedWeapons: Weapon[];
 
-    constructor(name: string, basePoints: number, keywords: string[], availableWeapons: Weapon[] = []) {
+    constructor(name: string, basePoints: number, keywords: Keyword[], availableWeapons: Weapon[] = []) {
         this.name = name;
         this.basePoints = basePoints;
         this.keywords = keywords;
@@ -28,7 +29,7 @@ export class Unit implements IUnit {
         return this.basePoints + weaponPoints;
     }
 
-    hasKeyword(keyword: string): boolean {
+    hasKeyword(keyword: Keyword): boolean {
         return this.keywords.includes(keyword);
     }
 
